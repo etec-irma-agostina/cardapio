@@ -1,3 +1,19 @@
+<?php
+
+    require ('./data/conection.php');
+    require('./data/ProdutosRepository.php');
+
+    $hora = date("H:i");
+
+    $numero_hora = date("H");
+    $mensagem = "Bom dia";
+    if ($numero_hora >= 12) $mensagem = "Boa tarde";
+    if ($numero_hora >= 18) $mensagem = "Boa noite";
+
+    $repository = new ProdutosRepository($pdo);
+    $lanches = $repository->getLanches();
+
+?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -13,8 +29,8 @@
     <nav>
         <h1>Epic Food</h1>
         <ul>
-            <li class="active"><a href="/index.html">cardápio</a></li>
-            <li><a href="/admin.html">produtos</a></li>
+            <li class="active"><a href="/index.php">cardápio</a></li>
+            <li><a href="/admin.php">produtos</a></li>
             <li><a href="/new.html">cadastrar</a></li>
         </ul>
         <div>
@@ -23,6 +39,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round"
                     d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
             </svg>
+            <span><?= $mensagem . ", são " . $hora ?></span>
         </div>
 
     </nav>
@@ -40,30 +57,16 @@
 
         <h4 id="lanches">🍔 lanches</h4>
         <section>
-            <div class="card">
-                <img src="./assets/images/lanche1.jpg" alt="food">
-                <div class="card-body">
-                    <h5>hamburguer</h5>
-                    <p>hamburguer de carne bovina, queijo, alface, tomate e molho especial</p>
-                    <p class="price">R$ 15,00</p>
+            <?php foreach ($lanches as $lanche): ?>
+                <div class="card">
+                    <img src="<?= $lanche->getImagem() ?>" alt="food">
+                    <div class="card-body">
+                        <h5><?= $lanche->getNome() ?></h5>
+                        <p><?= $lanche->getDescricao() ?></p>
+                        <p class="price"><?= $lanche->getPrecoFormatado() ?></p>
+                    </div>
                 </div>
-            </div>
-            <div class="card">
-                <img src="./assets/images/lanche1.jpg" alt="food">
-                <div class="card-body">
-                    <h5>hamburguer</h5>
-                    <p>hamburguer de carne bovina, queijo, alface, tomate e molho especial</p>
-                    <p class="price">R$ 15,00</p>
-                </div>
-            </div>
-            <div class="card">
-                <img src="./assets/images/lanche1.jpg" alt="food">
-                <div class="card-body">
-                    <h5>hamburguer</h5>
-                    <p>hamburguer de carne bovina, queijo, alface, tomate e molho especial</p>
-                    <p class="price">R$ 15,00</p>
-                </div>
-            </div>
+            <?php endforeach; ?>
         </section>
 
         <h4 id="massas">🍝 massas</h4>
